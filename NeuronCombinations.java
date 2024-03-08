@@ -17,6 +17,7 @@ public class NeuronCombinations {
                 // {6, 3, 1}
                 // {9, 3, 1}
         };
+        System.out.println("commit");
 
         for (int[] aCase : cases) {
             int n = aCase[0];
@@ -85,5 +86,6 @@ public class NeuronCombinations {
         }
 
         return getValidCombinations(neurons, sets, overlaps).size();
+
     }
 }
