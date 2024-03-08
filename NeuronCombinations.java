@@ -18,6 +18,7 @@ public class NeuronCombinations {
                 // {9, 3, 1}
         };
         System.out.println("commit");
+        System.out.println("from ibrabranch to ibrabranch");
 
         for (int[] aCase : cases) {
             int n = aCase[0];
