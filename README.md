@@ -10,3 +10,17 @@ Simulation of Neuronal Activity: Implement models to simulate the electrical act
 Connectivity Analysis: Tools to analyze and visualize the connectivity patterns between neurons.
 Pattern Detection: Algorithms to identify and interpret patterns of neuronal firing and interactions.
 Data-Driven Insights: Integration with experimental data to validate models and refine predictions.
+valid combinations: 
+n=9 s=3 o=1: 
+123
+168
+159
+147
+456
+249
+267
+258
+789
+357
+348
+369
