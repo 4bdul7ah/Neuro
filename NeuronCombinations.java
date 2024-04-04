@@ -1,92 +1,57 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class NeuronCombinations {
 
     public static void main(String[] args) {
         int[][] cases = {
-                // {36, 6, 1}
-                // {49, 7, 1}
-                // {64, 8, 1}
-                // {81, 9, 1}
-                {25, 5, 1}
-                // {6, 3, 1}
-                // {9, 3, 1}
+                {9, 3, 1} // Example test case should have 12 valid sets and print out all the 12 valid sets
         };
-        System.out.println("commit");
-        System.out.println("pushing to aBranch");
 
         for (int[] aCase : cases) {
             int n = aCase[0];
             int s = aCase[1];
             int o = aCase[2];
             System.out.println("For n=" + n + ", s=" + s + ", o=" + o + ":");
-            System.out.println("Number of valid sets: " + capacity(n, s, o));
-            System.out.println("Valid combinations: " + getValidCombinations(n, s, o));
+            List<Set<Integer>> validCombinations = getValidCombinations(n, s, o);
+            System.out.println("Number of valid sets: " + validCombinations.size());
+            System.out.println("Valid combinations: " + validCombinations);
             System.out.println("--------------------------------------------------");
         }
     }
 
-    public static boolean checkOverlap(Set<Integer> set1, Set<Integer> set2, int maxOverlap) {
-        Set<Integer> intersection = new HashSet<>(set1);
-        intersection.retainAll(set2);
-        return intersection.size() <= maxOverlap;
-    }
-
-    public static List<Set<Integer>> getValidCombinations(int neurons, int sets, int overlaps) {
-        List<Set<Integer>> allCombinations = new ArrayList<>();
-        generateCombinations(allCombinations, new HashSet<>(), 1, neurons, sets);
-// tester for brute force
-        List<Set<Integer>> initialSets = new ArrayList<>();
-        initialSets.add(new HashSet<>(Arrays.asList(1, 7, 9, 11, 13)));
-        initialSets.add(new HashSet<>(Arrays.asList(1, 6, 8, 10, 12)));
-        initialSets.add(new HashSet<>(Arrays.asList(2, 7, 8, 14, 15)));
-
-        List<Set<Integer>> validCombinations = new ArrayList<>(initialSets);
-// test ends here......................
-        // List<Set<Integer>> validCombinations = new ArrayList<>();
-        for (Set<Integer> combo : allCombinations) {
-            boolean isValid = true;
-            for (Set<Integer> validSet : validCombinations) {
-                if (!checkOverlap(combo, validSet, overlaps)) {
-                    isValid = false;
-                    break;
-                }
-            }
-            if (isValid) {
-                Set<Integer> sortedCombo = new TreeSet<>(combo);
-                validCombinations.add(sortedCombo);
-                // validCombinations.add(combo);
-            }
-        }
-        System.out.println("Number of valid combinations;" + validCombinations.size());// debugg 
-
+    private static List<Set<Integer>> getValidCombinations(int neurons, int sets, int overlaps) {
+        List<Set<Integer>> validCombinations = new ArrayList<>();
+        backtrack(validCombinations, new ArrayList<>(), 1, neurons, sets, overlaps);
         return validCombinations;
     }
 
-    public static void generateCombinations(List<Set<Integer>> allCombinations, Set<Integer> current, int start, int n, int k) {
-        if (k == 0) {
-            allCombinations.add(new HashSet<>(current));
+    private static void backtrack(List<Set<Integer>> validCombinations, List<Integer> current, int start, int neurons, int sets, int overlaps) {
+        if (current.size() == sets) {
+            if (isValidCombination(validCombinations, current, overlaps)) {
+                validCombinations.add(new HashSet<>(current));
+            }
             return;
         }
 
-        for (int i = start; i <= n; i++) {
+        for (int i = start; i <= neurons; i++) {
             current.add(i);
-            generateCombinations(allCombinations, current, i + 1, n, k - 1);
-            current.remove(i);
+            backtrack(validCombinations, current, i + 1, neurons, sets, overlaps);
+            current.remove(current.size() - 1);
         }
     }
 
-    public static int capacity(int neurons, int sets, int overlaps) {
-        if (neurons == sets * sets && overlaps == 1) {
-            return sets * (sets + 1);
+    private static boolean isValidCombination(List<Set<Integer>> validCombinations, List<Integer> current, int overlaps) {
+        for (Set<Integer> validCombination : validCombinations) {
+            int count = 0;
+            for (int num : current) {
+                if (validCombination.contains(num)) {
+                    count++;
+                }
+            }
+            if (count > overlaps) {
+                return false;
+            }
         }
-
-        return getValidCombinations(neurons, sets, overlaps).size();
-
+        return true;
     }
 }
